@@ -1,0 +1,67 @@
+\documentclass[a4paper,10pt,twocolumn]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{titling}
+\usepackage{nomencl}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[style=ieee,backend=bibtex]{biblatex}
+\usepackage{fancyhdr}
+\usepackage{varioref}
+
+% Path to images.
+\graphicspath{{img/}}
+
+% Setup nomenclature.
+\makenomenclature
+
+% Setup bibiliography.
+
+% Document info.
+\author{Z0966990}
+\title{Statistics Assignment}
+\date{\today}
+
+% Header and footer.
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\thetitle}
+\rhead{\theauthor}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Macros
+
+\begin{document}
+    
+% Title page.
+\begin{titlepage}
+    \centering
+    \vspace*{\fill}
+    \includegraphics[width=0.5\textwidth]{Durham}\\
+    \vspace*{\fill}
+    \LARGE\thetitle\\
+    \large\theauthor\\
+    \large L2 Engineering Mathematics\\
+    \large\thedate\\
+    \vspace*{\fill}
+\end{titlepage}
+
+% Nomenclature.
+\printnomenclature
+
+% Main matter.
+\section{Introduction}
+    
+\section{Analysis}
+
+% References.
+\printbibliography
+
+\clearpage
+
+\end{document}
