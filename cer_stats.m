@@ -2,87 +2,72 @@ function cer_stats()
 %CER_STATS Electricity consumption statistics assignmnet
 %   Code submission by: Z0966990
 
-
-%% Load the data from this directory
+%% Load the data from this directory.
+% Convert data into totals for each customer.
 data = load('CER_smartmeters.mat');
-day1 = struct();
-day200 = struct();
-day1.meter = data.day1_meter;
-day200.meter = data.day200_meter;
-clear('data');
 
-% Analyse each day.
-day1 = analyse(day1);
-day200 = analyse(day200);
-[day1, day1central95] = remove_outliers_and_analyse(day1);
+%% Preallocate variables for results.
+est_mean = nan(3, 1);
+est_std = nan(3, 1);
+ci90 = nan(3, 2);
+ci95 = nan(3, 2);
+n_out = nan(3, 1);
+
+DAY1 = 1;
+DAY200 = 2;
+MDAY1 = 3;
+
+% Compute totals for both days. Leave last column blank for outlier data.
+totals = [sum(data.day1_meter, 2), sum(data.day200_meter, 2)];
+
+%% Analyse means
+d = [DAY1, DAY200];
+est_mean(d) = mean(totals);
+est_std(d) = std(totals);
+ci90(d, :) = est_mean(d) + est_std(d)*norminv([0.05, 0.95]);
+ci95(d, :) = est_mean(d) + est_std(d)*norminv([0.025, 0.975]);
+
+%% Analyse outliers.
+% Mask central 95% of data for DAY1.
+m = totals(:, DAY1) >= ci95(DAY1, 1) & totals(:, DAY1) <= ci95(DAY1, 2);
+                        
+% Compute 95% confidence interval for masked data.
+est_mean(MDAY1) = mean(totals(m, DAY1));
+est_std(MDAY1) = std(totals(m, DAY1));
+ci95(MDAY1, :) = est_mean(MDAY1) + norminv([0.025; 0.975])*est_std(MDAY1);
+
+% Count number of outliers before and after masking.
+n_out(DAY1) = sum(~m);
+mm = totals(m, DAY1) >= ci95(MDAY1, 1) & totals(m, DAY1) <= ci95(MDAY1, 2);
+n_out(MDAY1) = sum(~mm);
 
 %% Plot Graphs
-figure();
-plot_distrib(axes(), day1.totals, 'Day 1 (Summer)');
-figure();
-plot_distrib(axes(), day200.totals, 'Day 200 (Winter)');
-figure();
-plot_distrib(axes(), day1central95.totals, 'Day 1 (Summer) - Central 95\%');
+get(0, 'ScreenSize')
+figure('OuterPosition', get(0, 'ScreenSize')*0.9);
+plot_distrib(axes(), totals(:, DAY1), 'Day 1 (Summer)');
+figure('OuterPosition', get(0, 'ScreenSize')*0.9);
+plot_distrib(axes(), totals(:, DAY200), 'Day 200 (Winter)');
+figure('OuterPosition', get(0, 'ScreenSize')*0.9);
+plot_distrib(axes(), totals(m, DAY1), 'Day 200 (Summer) -- Central 95\%');
 
-%% Generate Tables
-mean       = [day1.mean;          day200.mean];
-ci90_lower = [day1.ci90limits(1); day200.ci90limits(1)];
-ci90_upper = [day1.ci90limits(2); day200.ci90limits(2)];
-ci95_lower = [day1.ci95limits(1); day200.ci95limits(1)];
-ci95_upper = [day1.ci95limits(2); day200.ci95limits(2)];
-disp(table(mean, ci90_lower, ci90_upper, ci95_lower, ci95_upper,...
-    'RowNames', {'Summer', 'Winter'}));
+%% Generate Table
+% Rename confidence interval variables.
+ci90_1 = ci90(:, 1);
+ci90_2 = ci90(:, 2);
+ci95_1 = ci95(:, 1);
+ci95_2 = ci95(:, 2);
+disp(table(est_mean, ci90_1, ci90_2, ci95_1, ci95_2, n_out,...
+    'RowNames', {'Summer', 'Winter', 'Summer 95%'}));
 
-ci95_lower   = [day1.ci95limits(1); day1central95.ci95limits(1)];
-mean         = [day1.mean;          day1central95.mean];
-ci95_upper   = [day1.ci95limits(2); day1central95.ci95limits(2)];
-num_outliers = [day1.n95;           day1central95.n95];
-disp(table(mean, ci95_lower, ci95_upper, num_outliers,...
-    'RowNames', {'100%', '95%'}));
+    function plot_distrib(ax, data, name)
+    %%
+    histogram(ax, data, 50);
+    xlabel('Total Consumption', 'Interpreter', 'latex', 'FontSize', 34);
+    ylabel('Frequency', 'Interpreter', 'latex', 'FontSize', 34);
+    title(name, 'Interpreter', 'latex', 'FontSize', 36);
+    ax.FontSize = 30;
+    ax.TickLabelInterpreter = 'latex';
+    end
 end
 
-function data = analyse(data)
-%%
-
-% Calculate daily total for each customer.
-data.totals = sum(data.meter, 2);
-
-% Confidence intervals.
-data.mean = mean(data.totals);
-data.std = std(data.totals);
-z_95 = norminv(0.95);
-data.ci90limits = data.mean + [-z_95, z_95]*data.std;
-z_975 = norminv(0.975);
-data.ci95limits = data.mean + [-z_975, z_975]*data.std;
-end
-
-function [data, new_data] = remove_outliers_and_analyse(data)
-%%
-
-% Remove outliers.
-new_data = struct();
-new_data.totals = data.totals(data.totals <= data.ci95limits(2));
-
-% Confidence intervals.
-new_data.mean = mean(new_data.totals);
-new_data.std = std(new_data.totals);
-z_975 = norminv(0.975);
-new_data.ci95limits = new_data.mean + [-z_975, z_975]*new_data.std;
-
-% Count outliers.
-data.n95 = sum((data.totals < data.ci95limits(1)) |...
-               (data.totals > data.ci95limits(2)));
-new_data.n95 = sum((new_data.totals < new_data.ci95limits(1)) |...
-                   (new_data.totals > new_data.ci95limits(2)));
-end
-
-function plot_distrib(ax, data, titletxt)
-%%
-histogram(ax, data, 50);
-xlabel('Total Consumption', 'Interpreter', 'latex', 'FontSize', 34);
-ylabel('Frequency', 'Interpreter', 'latex', 'FontSize', 34);
-title(titletxt, 'Interpreter', 'latex', 'FontSize', 36);
-ax.FontSize = 30;
-ax.TickLabelInterpreter = 'latex';
-end
 
