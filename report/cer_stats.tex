@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt,twocolumn]{article}
+\documentclass[a4paper,10pt]{article}
 \usepackage[latin1]{inputenc}
 \usepackage[english]{babel}
 \usepackage{amsmath}
@@ -18,6 +18,9 @@
 % factor=1100 - add 10% to the protrusion amount (default is 1000)
 % stretch=10, shrink=10 - reduce stretchability/shrinkability (default is 20/20)
 
+% Reduce tracking around small caps to 40%
+\SetTracking{encoding={*}, shape=sc}{40}
+
 % Path to images.
 \graphicspath{{img/}}
 
@@ -26,6 +29,7 @@
 \setlength{\nomitemsep}{-\parsep}
 
 % Setup bibiliography.
+\addbibresource{bibliography}
 
 % Document info.
 \author{Z0966990}
@@ -40,8 +44,6 @@
 \cfoot{\thepage}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
-
-% Macros
 
 \begin{document}
     
@@ -59,67 +61,100 @@
 \end{titlepage}
 
 % Nomenclature.
-\nomenclature[0]{$n_{out}$}{Number of outliers, outside the 95\% confidence 
+\nomenclature[0]{$n_{out}$}{Number of datapoints outside the 95\% confidence 
 interval for the mean.}
-\nomenclature[1]{$\bar{x}$}{Sample mean of total energy consumption.}
+\nomenclature[1]{$\bar{x}$}{Mean total energy consumption for sample.}
 \printnomenclature
 
 % Main matter.
 \section{Introduction}
-    
-\section{Statistical Comparison}
+
+Statistical analysis was used to identify the demand patterns of energy 
+consumption in a range of homes on a summer and winter's day.
+
+In 2009 the Irish Commission for Energy Regulation (CER) undertook a trial 
+where smart meters were installed in 6256 homes \cite{martinsmart}. Those 
+meters recorded the rate  of electrical energy consumption every half hour for 
+a year.
+
+This report analysed the total energy consumption for two days in the 
+trial---the first day which occurred in the summer and the 200th day which 
+occurred in the winter. In order to get an idea for the total energy 
+consumption for each day, the half hourly consumption rates were summed for 
+each meter.
+
+Furthermore, it was noted a large number of meters recorded no energy 
+consumption. This could have been due to the consumers being away from the 
+premises or faulty meters. These meters were excluded from statistical 
+analysis. 
+
+\section{Demand Patterns}
+
+Figure~\vref{fig:Data} shows the distribution of the total energy consumption 
+for 6122 smart meters on day 1 of the trial which occurred in the summer and 
+6207 smart meters on day 200 of the trial which occurred in the winter. The 
+histograms do not include the meters which recorded no energy consumption that 
+day.
     
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.42\textwidth]{Day1}
-    \caption{Frequency histogram of total energy consumption on day 1.}
-    \label{fig:Day1}
-\end{figure}
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.42\textwidth]{Day200}
-    \caption{Frequency histogram of total energy consumption on day 200.}
-    \label{fig:Day200}
+    \includegraphics[width=0.48\textwidth]{Day1}
+    \includegraphics[width=0.48\textwidth]{Day200}
+    \caption{Frequency histogram of total energy consumption on each day.}
+    \label{fig:Data}
 \end{figure}
 
-\begin{table*}
+From initial inspection, it was clear both distributions the data had a strong 
+negative skew with a large number of meters reporting total consumption under 
+100 ?? and then outliers up to 1200 ??. This made it difficult to discern 
+details in the dataset when only 50 bins were used.
+
+However, the 90\% and 95\% confidence intervals for the mean total consumption 
+yields statistically significant results. Table~\vref{table:Mean} records the 
+upper and lower bounds for the mean at two different confidence levels.
+
+\begin{table}[h]
     \centering
     \begin{tabular}{llll}
         \toprule
-        \textbf{Day} & $\bar{x}$ & 90\% Interval     & 95\% Interval \\
+        \textbf{Day} & $\bar{x}$ & 90\% Interval & 95\% Interval \\
         \midrule
-        \textbf{Summer} & 30.595 & [-58.089, 119.28] & [-75.079, 136.27] \\
-        \textbf{Winter} & 39.265 & [-64.566, 143.10] & [-84.457, 162.99] \\
+        \textbf{Summer} & 31.265 & [30.608, 31.922] & [30.482, 32.048] \\
+        \textbf{Winter} & 39.575 & [38.749, 40.402] & [38.591, 40.560] \\
         \bottomrule
     \end{tabular}
     \caption{Confidence intervals for mean energy consumption on each day.}
     \label{table:Mean}
-\end{table*}
+\end{table}
 
-\section{Outlier Analysis}
+The mean total energy consumption on the winter day was greater than in the 
+summer. Furthermore, the 90\% and 95\% confidence intervals for the population 
+means on each day do not overlap. This suggests at the and 5\% significance 
+level---the 95\% confidence interval is statistically more significant---thes 
+mean total energy consumption of \textit{all} Irish households was greater on 
+the winter day.
 
+\section{Outliers}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.42\textwidth]{Day1Central95}
-    \caption{Frequency histogram of central 95\% of total energy consumption on 
-    day 1.}
+    \includegraphics[width=0.48\textwidth]{Day1Revised}
+    \caption{Frequency histogram of revised total energy consumption on day 1.}
     \label{fig:NoOutliers}
 \end{figure}
 
-\begin{table}
+\begin{table}[h]
     \centering
     \begin{tabular}{llll}
         \toprule
-        \textbf{Sample \%} & $\bar{x}$ & 95\% Interval & 
-        $n_{out}$ \\
+        \textbf{Data} & $\bar{x}$ & 95\% Interval & $n_{out}$ \\
         \midrule
-        \textbf{100\%} & 30.595 & [-75.079, 136.27] & 174 \\
-        \textbf{95\%}  & 39.265 & [-12.887, 59.708] & 250 \\
+        \textbf{Original} & 31.265 & [30.482, 32.048] & 3836 \\
+        \textbf{Revised}  & 16.471 & [16.241, 16.701] & 4541 \\
         \bottomrule
     \end{tabular}
-    \caption{Number of outliers for the central 100\% and 95\% of total energy 
-    consumption on day 1.}
+    \caption{Number of values outside the 95\% confidence interval for mean 
+    total energy consumption on day 1.}
     \label{table:Outliers}
 \end{table}
 

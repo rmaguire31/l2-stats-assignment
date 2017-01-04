@@ -9,55 +9,57 @@ data = load('CER_smartmeters.mat');
 %% Preallocate variables for results.
 est_mean = nan(3, 1);
 est_std = nan(3, 1);
+n = nan(3, 1);
 ci90 = nan(3, 2);
 ci95 = nan(3, 2);
 n_out = nan(3, 1);
 
-DAY1 = 1;
-DAY200 = 2;
-MDAY1 = 3;
+DAY200 = 1;
+DAY1 = 2;
+DAY1R = 3; % Day 1 Revised
 
-% Compute totals for both days. Leave last column blank for outlier data.
-totals = [sum(data.day1_meter, 2), sum(data.day200_meter, 2)];
+% Compute totals for both days. Elminate consumption values of 0 as they
+% suggest either meter is faulty or customer was not at home.
+totals = {sum(data.day200_meter, 2), sum(data.day1_meter, 2)};
+totals = cellfun(@(total)total(total>0), totals, 'UniformOutput', false);
 
 %% Analyse means
-d = [DAY1, DAY200];
-est_mean(d) = mean(totals);
-est_std(d) = std(totals);
-ci90(d, :) = est_mean(d) + est_std(d)*norminv([0.05, 0.95]);
-ci95(d, :) = est_mean(d) + est_std(d)*norminv([0.025, 0.975]);
+d = [DAY200, DAY1];
+n(d) = cellfun(@length, totals);
+est_mean(d) = cellfun(@mean, totals);
+est_std(d) = cellfun(@mean, totals);
+ci90(d, :) = est_mean(d) + est_std(d)*norminv([0.05, 0.95])./sqrt(n(d));
+ci95(d, :) = est_mean(d) + est_std(d)*norminv([0.025, 0.975])./sqrt(n(d));
 
 %% Analyse outliers.
-% Mask central 95% of data for DAY1.
-m = totals(:, DAY1) >= ci95(DAY1, 1) & totals(:, DAY1) <= ci95(DAY1, 2);
+% Mask data for DAY1 below the upper limit in the 95% confidence interval.
+m = totals{DAY1} <= ci95(DAY1, 2);
                         
-% Compute 95% confidence interval for masked data.
-est_mean(MDAY1) = mean(totals(m, DAY1));
-est_std(MDAY1) = std(totals(m, DAY1));
-ci95(MDAY1, :) = est_mean(MDAY1) + norminv([0.025; 0.975])*est_std(MDAY1);
+% Compute 95% confidence interval for revised data.
+n(DAY1R) = length(totals{DAY1}(m));
+est_mean(DAY1R) = mean(totals{DAY1}(m));
+est_std(DAY1R) = std(totals{DAY1}(m));
+ci95(DAY1R, :) = est_mean(DAY1R) + ...
+    est_std(DAY1R)*norminv([0.025, 0.975])./sqrt(n(DAY1R));
 
 % Count number of outliers before and after masking.
-n_out(DAY1) = sum(~m);
-mm = totals(m, DAY1) >= ci95(MDAY1, 1) & totals(m, DAY1) <= ci95(MDAY1, 2);
-n_out(MDAY1) = sum(~mm);
+m_out = ~(totals{DAY1} >= ci95(DAY1R, 1) & m);
+n_out(DAY1) = sum(m_out);
+mm_out = ~(totals{DAY1}(m) >= ci95(DAY1R, 1) &...
+           totals{DAY1}(m) <= ci95(DAY1R, 2));
+n_out(DAY1R) = sum(mm_out);
 
 %% Plot Graphs
-get(0, 'ScreenSize')
 figure('OuterPosition', get(0, 'ScreenSize')*0.9);
-plot_distrib(axes(), totals(:, DAY1), 'Day 1 (Summer)');
+plot_distrib(axes(), totals{DAY200}, 'Day 1 (Winter)');
 figure('OuterPosition', get(0, 'ScreenSize')*0.9);
-plot_distrib(axes(), totals(:, DAY200), 'Day 200 (Winter)');
+plot_distrib(axes(), totals{DAY1}, 'Day 200 (Summer)');
 figure('OuterPosition', get(0, 'ScreenSize')*0.9);
-plot_distrib(axes(), totals(m, DAY1), 'Day 200 (Summer) -- Central 95\%');
+plot_distrib(axes(), totals{DAY1}(m), 'Day 1 (Summer)---Revised');
 
 %% Generate Table
-% Rename confidence interval variables.
-ci90_1 = ci90(:, 1);
-ci90_2 = ci90(:, 2);
-ci95_1 = ci95(:, 1);
-ci95_2 = ci95(:, 2);
-disp(table(est_mean, ci90_1, ci90_2, ci95_1, ci95_2, n_out,...
-    'RowNames', {'Summer', 'Winter', 'Summer 95%'}));
+disp(table(est_mean, ci90, ci95, n_out,...
+    'RowNames', {'Winter', 'Summer', 'Summer Revised'}));
 
     function plot_distrib(ax, data, name)
     %%
