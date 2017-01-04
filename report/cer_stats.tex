@@ -85,16 +85,14 @@ each meter.
 
 Furthermore, it was noted a large number of meters recorded no energy 
 consumption. This could have been due to the consumers being away from the 
-premises or faulty meters. These meters were excluded from statistical 
-analysis. 
+premises or the meters being faulty. These meters were excluded from 
+statistical analysis to avoid skewing the mean of the distribution.
 
 \section{Demand Patterns}
 
 Figure~\vref{fig:Data} shows the distribution of the total energy consumption 
-for 6122 smart meters on day 1 of the trial which occurred in the summer and 
-6207 smart meters on day 200 of the trial which occurred in the winter. The 
-histograms do not include the meters which recorded no energy consumption that 
-day.
+for 6122 smart meters on day 1 and day 200. The histograms do not include the 
+meters which recorded no energy consumption that day.
     
 \begin{figure}[h]
     \centering
@@ -104,14 +102,15 @@ day.
     \label{fig:Data}
 \end{figure}
 
-From initial inspection, it was clear both distributions the data had a strong 
-negative skew with a large number of meters reporting total consumption under 
-100 ?? and then outliers up to 1200 ??. This made it difficult to discern 
+From initial inspection, it was clear for both distributions the data had a 
+strong negative skew with a large number of meters reporting total consumption 
+under 100 and then outliers up to 1200. This made it difficult to discern 
 details in the dataset when only 50 bins were used.
 
 However, the 90\% and 95\% confidence intervals for the mean total consumption 
-yields statistically significant results. Table~\vref{table:Mean} records the 
-upper and lower bounds for the mean at two different confidence levels.
+still yielded statistically significant results. Table~\vref{table:Mean} 
+records the upper and lower bounds for the mean at two different confidence 
+levels.
 
 \begin{table}[h]
     \centering
@@ -127,14 +126,17 @@ upper and lower bounds for the mean at two different confidence levels.
     \label{table:Mean}
 \end{table}
 
-The mean total energy consumption on the winter day was greater than in the 
-summer. Furthermore, the 90\% and 95\% confidence intervals for the population 
-means on each day do not overlap. This suggests at the and 5\% significance 
-level---the 95\% confidence interval is statistically more significant---thes 
-mean total energy consumption of \textit{all} Irish households was greater on 
-the winter day.
+The 90\% and 95\% confidence intervals for the population mean total energy 
+consumption on each day did not overlap. The upper bound of the 95\% interval 
+on the summer's day at 32.048 was less than the lower bound of the 95\% 
+interval on the winter's day at 38.591. This suggests at the 5\% level of 
+significance, the mean total energy consumption on day 200 in the winter for 
+all Irish households was greater than on day 1 in the summer.
 
 \section{Outliers}
+
+In order to eliminate the outliers in the dataset and achieve a more 
+symmetrical distribution, the data for day 1 was revised by 
 
 \begin{figure}[h]
     \centering
