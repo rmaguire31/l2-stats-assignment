@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,10pt,twocolumn]{article}
 \usepackage[latin1]{inputenc}
 \usepackage[english]{babel}
 \usepackage{amsmath}
@@ -7,6 +7,7 @@
 \usepackage{titling}
 \usepackage{nomencl}
 \usepackage{booktabs}
+\usepackage[font={footnotesize}]{caption}
 \usepackage{graphicx}
 \usepackage[style=ieee,backend=bibtex]{biblatex}
 \usepackage{fancyhdr}
@@ -26,7 +27,14 @@
 
 % Setup nomenclature.
 \makenomenclature
+\newlength{\nomtitlesep}
+\setlength{\nomtitlesep}{\nomitemsep}
 \setlength{\nomitemsep}{-\parsep}
+\renewcommand{\nomgroup}[1]{%
+    \itemsep\nomtitlesep
+    \ifthenelse{\equal{#1}{V}}{\item[\textbf{Variables}]}{}
+    \itemsep\nomitemsep
+}
 
 % Setup bibiliography.
 \addbibresource{bibliography}
@@ -61,104 +69,155 @@
 \end{titlepage}
 
 % Nomenclature.
-\nomenclature[0]{$n_{out}$}{Number of datapoints outside the 95\% confidence 
-interval for the mean.}
-\nomenclature[1]{$\bar{x}$}{Mean total energy consumption for sample.}
+\nomenclature[0]{$n$}{Number of meter readings in sample.}
+\nomenclature[1]{$n_{out}$}{Number of meter readings outside the 95\% 
+confidence interval for the mean.}
+\nomenclature[2]{$\bar{x}$}{Mean total energy consumption for sample.}
+\nomenclature[3]{$\sigma$}{Unbiased estimate of population standard deviation.}
+
+\nomenclature[V]{$E$}{Total energy consumption.}
+\nomenclature[V]{$P$}{Rate of energy consumption.}
+\nomenclature[V]{$t$}{Time.}
 \printnomenclature
 
 % Main matter.
 \section{Introduction}
 
 Statistical analysis was used to identify the demand patterns of energy 
-consumption in a range of homes on a summer and winter's day.
+consumption in a range of homes on a summer and winter's day, but also to 
+analyse the effect of outliers on a distribution.
 
 In 2009 the Irish Commission for Energy Regulation (CER) undertook a trial 
 where smart meters were installed in 6256 homes \cite{martinsmart}. Those 
-meters recorded the rate  of electrical energy consumption every half hour for 
-a year.
+meters recorded the rate of electrical energy consumption every half hour for a 
+year.
 
 This report analysed the total energy consumption for two days in the 
 trial---the first day which occurred in the summer and the 200th day which 
-occurred in the winter. In order to get an idea for the total energy 
-consumption for each day, the half hourly consumption rates were summed for 
-each meter.
+occurred in the winter. In order to get an energy consumption in kWh, the  
+following simple numerical integration was applied:
 
-Furthermore, it was noted a large number of meters recorded no energy 
-consumption. This could have been due to the consumers being away from the 
-premises or the meters being faulty. These meters were excluded from 
-statistical analysis to avoid skewing the mean of the distribution.
+\begin{equation}
+    E = \sum{P \cdot \Delta t}
+    \label{eq:Integrate}
+\end{equation}
+
+Where $P$ was the the half hourly power demand readings in kW. Constant $\Delta 
+t$ was 0.5~h, the time interval between readings. The variable analysed in this 
+report ($E$) was an approximation of the energy consumed that day in kWh, 
+henceforth denoted $x$.
+
+It was noted a large number of meters recorded no energy consumption. This 
+could have been due to the consumers being away from the premises or the meters 
+being faulty. These meters were excluded from statistical analysis to avoid 
+skewing the mean of the distribution.
 
 \section{Demand Patterns}
 
-Figure~\vref{fig:Data} shows the distribution of the total energy consumption 
-for 6122 smart meters on day 1 and day 200. The histograms do not include the 
-meters which recorded no energy consumption that day.
+Figure~\vref{fig:Data} shows the distribution of the energy consumption 
+recorded by 6122 smart meters on day 1 and 6207 smarts meters day 200. The 
+histograms do not include the meters which recorded no energy consumption that 
+day.
     
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.48\textwidth]{Day1}
-    \includegraphics[width=0.48\textwidth]{Day200}
+    \includegraphics[width=0.42\textwidth]{Day1}
+    \includegraphics[width=0.42\textwidth]{Day200}
     \caption{Frequency histogram of total energy consumption on each day.}
     \label{fig:Data}
 \end{figure}
 
 From initial inspection, it was clear for both distributions the data had a 
-strong negative skew with a large number of meters reporting total consumption 
-under 100 and then outliers up to 1200. This made it difficult to discern 
-details in the dataset when only 50 bins were used.
+strong negative skew with the majority of meters reporting a total consumption 
+under 50~kWh, but with outliers as large as 500~kWh. This made it difficult to 
+discern details in the dataset when only 50 bins were used.
 
-However, the 90\% and 95\% confidence intervals for the mean total consumption 
-still yielded statistically significant results. Table~\vref{table:Mean} 
-records the upper and lower bounds for the mean at two different confidence 
-levels.
+Nonetheless, the mean total consumption still yielded statistically significant 
+results. Table~\vref{table:Mean} records the upper and lower bounds for the 
+mean at two different confidence levels.
 
-\begin{table}[h]
+\begin{table*}[h]
     \centering
     \begin{tabular}{llll}
         \toprule
-        \textbf{Day} & $\bar{x}$ & 90\% Interval & 95\% Interval \\
+        \textbf{Day} & $\bar{x}$, \tiny{kWh} & 90\% Interval, \tiny{kWh} & 95\% 
+        Interval, \tiny{kWh} \\
         \midrule
-        \textbf{Summer} & 31.265 & [30.608, 31.922] & [30.482, 32.048] \\
-        \textbf{Winter} & 39.575 & [38.749, 40.402] & [38.591, 40.560] \\
+        \textbf{Summer} & 15.632 & [15.062, 16.203] & [14.952, 16.313] \\
+        \textbf{Winter} & 19.788 & [19.127, 20.448] & [19.001, 20.575] \\
         \bottomrule
     \end{tabular}
-    \caption{Confidence intervals for mean energy consumption on each day.}
+    \caption{Confidence intervals for mean total energy consumption on each 
+    day.}
     \label{table:Mean}
-\end{table}
+\end{table*}
 
 The 90\% and 95\% confidence intervals for the population mean total energy 
 consumption on each day did not overlap. The upper bound of the 95\% interval 
-on the summer's day at 32.048 was less than the lower bound of the 95\% 
-interval on the winter's day at 38.591. This suggests at the 5\% level of 
+on the summer's day at 16.313~kWh was less than the lower bound of the 95\% 
+interval on the winter's day at 19.001~kWh. This suggests, at the 5\% level of 
 significance, the mean total energy consumption on day 200 in the winter for 
-all Irish households was greater than on day 1 in the summer.
+all Irish households was greater than on day 1 in the summer. The 90\% 
+confidence intervals reiterate the same conclusion but with less significance.
 
 \section{Outliers}
 
 In order to eliminate the outliers in the dataset and achieve a more 
-symmetrical distribution, the data for day 1 was revised by 
+symmetrical distribution, the data for day 1 was revised by removing meters 
+which recorded an energy consumption greater than the upper limit of the 95\% 
+confidence interval for the mean. Figure~\vref{fig:NoOutliers} shows the 
+distribution of the revised data.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.48\textwidth]{Day1Revised}
-    \caption{Frequency histogram of revised total energy consumption on day 1.}
+    \includegraphics[width=0.42\textwidth]{Day1}
+    \includegraphics[width=0.42\textwidth]{Day1Revised}
+    \caption{Frequency histograms of original and revised total energy 
+    consumption on the summer's day.}
     \label{fig:NoOutliers}
 \end{figure}
+
+From inspection, the distribution of the revised data appeared to follow a more 
+normal distribution than the original data for energy consumption on the 
+summer's day. This more normal distribution results in more accurate 
+predictions for the 95\% confidence interval for the revised mean shown in 
+Table~\vref{table:Outliers} alongside the original data. This is because the 
+confidence intervals assume an underlying normal distribution.
 
 \begin{table}[h]
     \centering
     \begin{tabular}{llll}
         \toprule
-        \textbf{Data} & $\bar{x}$ & 95\% Interval & $n_{out}$ \\
+        \textbf{Data} & $\bar{x}$, \tiny{kWh} & 95\% Interval, \tiny{kWh} & 
+        $n_{out}$ \\
         \midrule
-        \textbf{Original} & 31.265 & [30.482, 32.048] & 3836 \\
-        \textbf{Revised}  & 16.471 & [16.241, 16.701] & 4541 \\
+        \textbf{Original} & 15.632 & [14.952, 16.313] & 3816 \\
+        \textbf{Revised}  & 8.3173 & [8.2011, 8.4335] & 4595 \\
         \bottomrule
     \end{tabular}
-    \caption{Number of values outside the 95\% confidence interval for mean 
-    total energy consumption on day 1.}
+    \caption{Number of values outside the 95\% interval for mean total energy 
+    consumption on the summer's day.}
     \label{table:Outliers}
 \end{table}
+
+Furthermore, the mean of the revised data lies closer to the modal and median 
+values for the distribution. This suggests the mean of the revised data and its 
+associated confidence intervals are a better measure of central tendency than 
+the mean of the original data.
+
+The number of data-points outside the 95\% confidence interval for the mean 
+would be expected to decrease when the number of data-points was reduced in 
+revising the original energy consumption data. On the contrary, 
+Table~\vref{table:Outliers} indicates the number of points outside this 
+interval increased from 3816/6122 to 4595/4660.
+
+The width of a confidence interval is indicative of it precision, given by 
+$2\sigma/\sqrt{n}$. In this case, the reduction in variance due to removing 
+outliers had a greater effect on increasing precision than reducing the sample 
+size had on decreasing precision. In revising the energy consumption data, the 
+width of the 95\% confidence interval dropped from 1.541~kWh to 0.2324~kWh.
+
+It was the increased confidence in the mean and the 
 
 % References.
 \printbibliography
