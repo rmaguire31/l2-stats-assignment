@@ -55,11 +55,11 @@ mm_out = ~(energy{DAY1}(m) >= ci95(DAY1R, 1) &...
 n_out(DAY1R) = sum(mm_out);
 
 %% Plot Graphs
-figure('OuterPosition', get(0, 'ScreenSize')*0.9);
+figure();
 plot_distrib(axes(), energy{DAY200}, 'Day 200 (Winter)');
-figure('OuterPosition', get(0, 'ScreenSize')*0.9);
+figure();
 plot_distrib(axes(), energy{DAY1}, 'Day 1 (Summer)');
-figure('OuterPosition', get(0, 'ScreenSize')*0.9);
+figure();
 plot_distrib(axes(), energy{DAY1}(m), 'Day 1 (Summer)---Revised');
 
 %% Generate Table
@@ -69,12 +69,8 @@ disp(table(est_mean, ci90, ci95, n_out,...
     function plot_distrib(ax, data, name)
     %%
     histogram(ax, data, 50);
-    xlabel('Total Consumption / kWh', 'Interpreter', 'latex', 'FontSize', 34);
-    ylabel('Frequency', 'Interpreter', 'latex', 'FontSize', 34);
-    title(name, 'Interpreter', 'latex', 'FontSize', 36);
-    ax.FontSize = 30;
-    ax.TickLabelInterpreter = 'latex';
+    xlabel('Total Consumption / kWh');
+    ylabel('Frequency');
+    title(name);
     end
 end
-
-
