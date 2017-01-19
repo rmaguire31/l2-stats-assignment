@@ -33,8 +33,10 @@ d = [DAY200, DAY1];
 n(d) = cellfun(@length, energy(d));
 est_mean(d) = cellfun(@mean, energy(d));
 est_std(d) = cellfun(@std, energy(d));
-ci90(d, :) = est_mean(d) + est_std(d)*norminv([0.05, 0.95])./sqrt(n(d));
-ci95(d, :) = est_mean(d) + est_std(d)*norminv([0.025, 0.975])./sqrt(n(d));
+ci90(d, :) = est_mean(d)*[1, 1] + ...
+    est_std(d)./sqrt(n(d))*norminv([0.05, 0.95]);
+ci95(d, :) = est_mean(d)*[1, 1] + ...
+    est_std(d)./sqrt(n(d))*norminv([0.025, 0.975]);
 
 %% Analyse outliers.
 % Mask data for DAY1 below the upper limit in the 95% confidence interval.
@@ -44,8 +46,8 @@ m = energy{DAY1} <= ci95(DAY1, 2);
 n(DAY1R) = length(energy{DAY1}(m));
 est_mean(DAY1R) = mean(energy{DAY1}(m));
 est_std(DAY1R) = std(energy{DAY1}(m));
-ci95(DAY1R, :) = est_mean(DAY1R) + ...
-    est_std(DAY1R)*norminv([0.025, 0.975])./sqrt(n(DAY1R));
+ci95(DAY1R, :) = est_mean(DAY1R)*[1, 1] + ...
+    est_std(DAY1R)./sqrt(n(DAY1R))*norminv([0.025, 0.975]);
 
 % Count number of outliers before and after masking.
 m_out = ~(energy{DAY1} >= ci95(DAY1R, 1) & m);
