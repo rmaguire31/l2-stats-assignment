@@ -1,0 +1,95 @@
+%% Creator: Inkscape inkscape 0.91, www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'Consumption.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{760.22676581bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.80061004)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{Consumption.pdf}}%
+    \put(0.09748853,0.42082724){\makebox(0,0)[lb]{\smash{\tiny0}}}%
+    \put(0.17157169,0.42082724){\makebox(0,0)[lb]{\smash{\tiny50}}}%
+    \put(0.24565485,0.42082724){\makebox(0,0)[lb]{\smash{\tiny100}}}%
+    \put(0.32394727,0.42082724){\makebox(0,0)[lb]{\smash{\tiny150}}}%
+    \put(0.4022397,0.42082724){\makebox(0,0)[lb]{\smash{\tiny200}}}%
+    \put(0.48053213,0.42082724){\makebox(0,0)[lb]{\smash{\tiny250}}}%
+    \put(0.55882456,0.42082724){\makebox(0,0)[lb]{\smash{\tiny300}}}%
+    \put(0.63711699,0.42082724){\makebox(0,0)[lb]{\smash{\tiny350}}}%
+    \put(0.71540942,0.42082724){\makebox(0,0)[lb]{\smash{\tiny400}}}%
+    \put(0.79370185,0.42082724){\makebox(0,0)[lb]{\smash{\tiny450}}}%
+    \put(0.87199428,0.42082724){\makebox(0,0)[lb]{\smash{\tiny500}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{Consumption.pdf}}%
+    \put(0.06188515,0.44169817){\makebox(0,0)[lb]{\smash{\tiny0}}}%
+    \put(0.04504807,0.49817258){\makebox(0,0)[lb]{\smash{\tiny500}}}%
+    \put(0.03557721,0.55464689){\makebox(0,0)[lb]{\smash{\tiny1000}}}%
+    \put(0.03557721,0.6111213){\makebox(0,0)[lb]{\smash{\tiny1500}}}%
+    \put(0.03557721,0.66759571){\makebox(0,0)[lb]{\smash{\tiny2000}}}%
+    \put(0.03557721,0.72407002){\makebox(0,0)[lb]{\smash{\tiny2500}}}%
+    \put(0.03557721,0.78054443){\makebox(0,0)[lb]{\smash{\tiny3000}}}%
+    \put(0.0166355,0.53640696){\rotatebox{90}{\makebox(0,0)[lb]{\smash{\footnotesize Frequency}}}}%
+    \put(0.36214693,0.73698219){\makebox(0,0)[lb]{\smash{\footnotesize Day 1 (Summer)}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{Consumption.pdf}}%
+    \put(0.09959316,0.03699714){\makebox(0,0)[lb]{\smash{\tiny0}}}%
+    \put(0.22166201,0.03699714){\makebox(0,0)[lb]{\smash{\tiny100}}}%
+    \put(0.35214939,0.03699714){\makebox(0,0)[lb]{\smash{\tiny200}}}%
+    \put(0.48263677,0.03699714){\makebox(0,0)[lb]{\smash{\tiny300}}}%
+    \put(0.61312415,0.03699714){\makebox(0,0)[lb]{\smash{\tiny400}}}%
+    \put(0.74361153,0.03699714){\makebox(0,0)[lb]{\smash{\tiny500}}}%
+    \put(0.87409891,0.03699714){\makebox(0,0)[lb]{\smash{\tiny600}}}%
+    \put(0.29479839,0.00612909){\makebox(0,0)[lb]{\smash{\footnotesize Total Consumption / kWh}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{Consumption.pdf}}%
+    \put(0.06188515,0.05786807){\makebox(0,0)[lb]{\smash{\tiny0}}}%
+    \put(0.04504807,0.11434249){\makebox(0,0)[lb]{\smash{\tiny500}}}%
+    \put(0.03557721,0.17081679){\makebox(0,0)[lb]{\smash{\tiny1000}}}%
+    \put(0.03557721,0.22729121){\makebox(0,0)[lb]{\smash{\tiny1500}}}%
+    \put(0.03557721,0.28376562){\makebox(0,0)[lb]{\smash{\tiny2000}}}%
+    \put(0.03557721,0.34023993){\makebox(0,0)[lb]{\smash{\tiny2500}}}%
+    \put(0.03557721,0.39671434){\makebox(0,0)[lb]{\smash{\tiny3000}}}%
+    \put(0.0166355,0.15257687){\rotatebox{90}{\makebox(0,0)[lb]{\smash{\footnotesize Frequency}}}}%
+    \put(0.35795125,0.35315209){\makebox(0,0)[lb]{\smash{\footnotesize Day 200 (Winter)}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{Consumption.pdf}}%
+  \end{picture}%
+\endgroup%

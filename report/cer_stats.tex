@@ -7,6 +7,7 @@
 \usepackage{titling}
 \usepackage{nomencl}
 \usepackage{booktabs}
+\usepackage{color}
 \usepackage[font={footnotesize}]{caption}
 \usepackage{graphicx}
 \usepackage[style=ieee,backend=bibtex]{biblatex}
@@ -121,8 +122,8 @@ day.
     
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.42\textwidth]{Day1}
-    \includegraphics[width=0.42\textwidth]{Day200}
+    \def\svgwidth{0.5\textwidth}
+    \input{img/Consumption.pdf_tex}
     \caption{Frequency histogram of total energy consumption on each day.}
     \label{fig:Data}
 \end{figure}
@@ -138,6 +139,8 @@ mean at two different confidence levels.
 
 \begin{table*}[h]
     \centering
+    \caption{Confidence intervals for mean total energy consumption on each 
+        day.\vspace{-\parsep}}
     \begin{tabular}{llll}
         \toprule
         \textbf{Day} & $\bar{x}$, \tiny{kWh} & 90\% Interval, \tiny{kWh} & 95\% 
@@ -147,8 +150,6 @@ mean at two different confidence levels.
         \textbf{Winter} & 19.788 & [19.127, 20.448] & [19.001, 20.575] \\
         \bottomrule
     \end{tabular}
-    \caption{Confidence intervals for mean total energy consumption on each 
-    day.}
     \label{table:Mean}
 \end{table*}
 
@@ -170,8 +171,8 @@ distribution of the revised data.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.42\textwidth]{Day1}
-    \includegraphics[width=0.42\textwidth]{Day1Revised}
+    \def\svgwidth{0.5\textwidth}
+    \input{img/Day1Revised.pdf_tex}
     \caption{Frequency histograms of original and revised total energy 
     consumption on the summer's day.}
     \label{fig:NoOutliers}
@@ -186,6 +187,8 @@ confidence intervals assume an underlying normal distribution.
 
 \begin{table}[h]
     \centering
+    \caption{Number of values outside the 95\% interval for mean total energy 
+        consumption on the summer's day.\vspace{-\parsep}}
     \begin{tabular}{llll}
         \toprule
         \textbf{Data} & $\bar{x}$, \tiny{kWh} & 95\% Interval, \tiny{kWh} & 
@@ -195,8 +198,6 @@ confidence intervals assume an underlying normal distribution.
         \textbf{Revised}  & 8.3173 & [8.2011, 8.4335] & 4595 \\
         \bottomrule
     \end{tabular}
-    \caption{Number of values outside the 95\% interval for mean total energy 
-    consumption on the summer's day.}
     \label{table:Outliers}
 \end{table}
 
@@ -211,13 +212,15 @@ revising the original energy consumption data. On the contrary,
 Table~\vref{table:Outliers} indicates the number of points outside this 
 interval increased from 3816/6122 to 4595/4660.
 
-The width of a confidence interval is indicative of it precision, given by 
-$2\sigma/\sqrt{n}$. In this case, the reduction in variance due to removing 
-outliers had a greater effect on increasing precision than reducing the sample 
-size had on decreasing precision. In revising the energy consumption data, the 
-width of the 95\% confidence interval dropped from 1.541~kWh to 0.2324~kWh.
+The width of a confidence interval is indicative of the precision in the 
+estimate of the mean, given by $2\sigma/\sqrt{n}$. In this case, the reduction 
+in variance due to removing outliers had a greater effect on increasing 
+precision than reducing the sample size had on decreasing precision. In 
+revising the energy consumption data, the width of the 95\% confidence interval 
+dropped from 1.541~kWh to 0.2324~kWh.
 
-It was the increased confidence in the mean and the 
+It was the increased precision in estimating the mean that resulted in more 
+values lying outside the 95\% confidence interval.
 
 % References.
 \printbibliography
