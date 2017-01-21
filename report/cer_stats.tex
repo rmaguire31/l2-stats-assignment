@@ -29,7 +29,7 @@
 % Setup nomenclature.
 \makenomenclature
 \newlength{\nomtitlesep}
-\setlength{\nomtitlesep}{\nomitemsep}
+\setlength{\nomtitlesep}{-\parsep}
 \setlength{\nomitemsep}{-\parsep}
 \renewcommand{\nomgroup}[1]{%
     \itemsep\nomtitlesep
@@ -73,6 +73,7 @@
 \nomenclature[0]{$n$}{Number of meter readings in sample.}
 \nomenclature[1]{$n_{out}$}{Number of meter readings outside the 95\% 
 confidence interval for the mean.}
+\nomenclature[1]{$z_{\alpha/2}$}{Critical value for confidence interval.}
 \nomenclature[2]{$\bar{x}$}{Mean total energy consumption for sample.}
 \nomenclature[3]{$\sigma$}{Unbiased estimate of population standard deviation.}
 
@@ -97,12 +98,10 @@ This report analysed the total energy consumption for two days in the
 trial---the first day which occurred in the summer and the 200th day which 
 occurred in the winter. In order to get an energy consumption in kWh, the  
 following simple numerical integration was applied:
-
 \begin{equation}
     E = \sum{P \cdot \Delta t}
     \label{eq:Integrate}
 \end{equation}
-
 Where $P$ was the the half hourly power demand readings in kW. Constant $\Delta 
 t$ was 0.5~h, the time interval between readings. The variable analysed in this 
 report ($E$) was an approximation of the energy consumed that day in kWh, 
@@ -135,22 +134,32 @@ discern details in the dataset when only 50 bins were used.
 
 Nonetheless, the mean total consumption still yielded statistically significant 
 results. Table~\vref{table:Mean} records the upper and lower bounds for the 
-mean at two different confidence levels.
+mean at two different confidence levels, calculated using the following:
+\begin{equation}
+    \left(\bar{x} - z_{\alpha/2}\frac{\sigma}{\sqrt{n}},~
+        \bar{x} + z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\right)
+    \label{eq:CI}
+\end{equation}
+Where $\bar{x}$ was the sample mean; $z_{\alpha/2}$ was 1.645 and 1.96 at the 
+90\% and 95\% level respectively; $\sigma$ was the unbiased estimate of the 
+population standard deviation; and $n$ the sample size.
 
 \begin{table*}[h]
     \centering
     \caption{Confidence intervals for mean total energy consumption on each 
         day.\vspace{-\parsep}}
-    \begin{tabular}{llll}
+    \label{table:Mean}
+    \begin{tabular}{lrr@{\,}rr@{\,}r}
         \toprule
-        \textbf{Day} & $\bar{x}$, \tiny{kWh} & 90\% Interval, \tiny{kWh} & 95\% 
-        Interval, \tiny{kWh} \\
+        \textbf{Day} & 
+        \multicolumn{1}{l}{$\bar{x}$, \tiny{kWh}} & 
+        \multicolumn{2}{l}{90\% Interval, \tiny{kWh}} &
+        \multicolumn{2}{l}{95\% Interval, \tiny{kWh}} \\
         \midrule
-        \textbf{Summer} & 15.632 & [15.062, 16.203] & [14.952, 16.313] \\
-        \textbf{Winter} & 19.788 & [19.127, 20.448] & [19.001, 20.575] \\
+        \textbf{Summer} & 15.632 & (15.062, & 16.203) & (14.952, & 16.313) \\
+        \textbf{Winter} & 19.788 & (19.127, & 20.448) & (19.001, & 20.575) \\
         \bottomrule
     \end{tabular}
-    \label{table:Mean}
 \end{table*}
 
 The 90\% and 95\% confidence intervals for the population mean total energy 
@@ -182,23 +191,25 @@ From inspection, the distribution of the revised data appeared to follow a more
 normal distribution than the original data for energy consumption on the 
 summer's day. This more normal distribution results in more accurate 
 predictions for the 95\% confidence interval for the revised mean shown in 
-Table~\vref{table:Outliers} alongside the original data. This is because the 
-confidence intervals assume an underlying normal distribution.
+Table~\vref{table:Outliers} alongside the original data. This is partly because 
+the confidence intervals assume an underlying normal distribution.
 
 \begin{table}[h]
     \centering
     \caption{Number of values outside the 95\% interval for mean total energy 
         consumption on the summer's day.\vspace{-\parsep}}
-    \begin{tabular}{llll}
+    \label{table:Outliers}
+    \begin{tabular}{lrr@{\,}rr}
         \toprule
-        \textbf{Data} & $\bar{x}$, \tiny{kWh} & 95\% Interval, \tiny{kWh} & 
-        $n_{out}$ \\
+        \textbf{Data} & 
+        \multicolumn{1}{l}{$\bar{x}$, \tiny{kWh}} & 
+        \multicolumn{2}{l}{95\% Interval, \tiny{kWh}} & 
+        \multicolumn{1}{l}{$n_{out}$} \\
         \midrule
-        \textbf{Original} & 15.632 & [14.952, 16.313] & 3816 \\
-        \textbf{Revised}  & 8.3173 & [8.2011, 8.4335] & 4595 \\
+        \textbf{Original} & 15.632 & (14.952, & 16.313) & 3816 \\
+        \textbf{Revised}  & 8.3173 & (8.2011, & 8.4335) & 4595 \\
         \bottomrule
     \end{tabular}
-    \label{table:Outliers}
 \end{table}
 
 Furthermore, the mean of the revised data lies closer to the modal and median 
@@ -213,11 +224,10 @@ Table~\vref{table:Outliers} indicates the number of points outside this
 interval increased from 3816/6122 to 4595/4660.
 
 The width of a confidence interval is indicative of the precision in the 
-estimate of the mean, given by $2\sigma/\sqrt{n}$. In this case, the reduction 
-in variance due to removing outliers had a greater effect on increasing 
-precision than reducing the sample size had on decreasing precision. In 
-revising the energy consumption data, the width of the 95\% confidence interval 
-dropped from 1.541~kWh to 0.2324~kWh.
+estimate of the mean. In this case, the reduction in variance due to removing 
+outliers had a greater effect on increasing precision than reducing the sample 
+size had on decreasing precision. In revising the energy consumption data, the 
+width of the 95\% confidence interval dropped from 1.541~kWh to 0.2324~kWh.
 
 It was the increased precision in estimating the mean that resulted in more 
 values lying outside the 95\% confidence interval.
